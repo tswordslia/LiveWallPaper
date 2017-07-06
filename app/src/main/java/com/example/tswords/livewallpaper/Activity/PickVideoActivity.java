@@ -53,7 +53,7 @@ public class PickVideoActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);
-        if(selectedLeft){
+        if(selectedLeft){       //初始打开pickVideoActivity时加载示例视频缩略图
             LoadExampleVideoBitmap();
         }
 //        List<Thumbnail>  exampleList=new ArrayList<>();   //示例资源
@@ -178,8 +178,10 @@ public class PickVideoActivity extends AppCompatActivity {
             for(int i=0;i<list.size();i++){
 
                     Thumbnail tmp=new Thumbnail("test", GetVideoInfoUtils.getExampleVideoBitmap(list.get(i)),1,list.get(i));
+                    if(!selectedLeft) {   //当切换到本地视频时，结束这个线程
+                        return null;
+                    }
                     publishProgress(tmp);
-
             }
             return null;
         }
@@ -214,7 +216,9 @@ public class PickVideoActivity extends AppCompatActivity {
                     if (bitmap != null) {
                         publishProgress(new LoadedImage(bitmap, i));
                     }
-
+                if(selectedLeft) {   //当切换到示例时，结束这个线程
+                    return null;
+                }
             }
             return null;
         }
